@@ -68,28 +68,107 @@ li {
 }
 
 li:nth-child(even) {
-    background-color: #f9f9f9;
-}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 20px;
+    }
 
-.remove-button {
-    padding: 5px 10px;
-    font-size: 14px;
-    color: #fff;
-    background-color: #d9534f;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+    h1 {
+        color: #333;
+        margin-bottom: 20px;
+    }
 
-.remove-button:hover {
-    background-color: #c9302c;
-}
-    
-    
+    input[type="text"] {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 300px;
+        max-width: 100%;
+    }
+
+    input[type="time"] {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 150px;
+        max-width: 100%;
+        margin-top: 10px;
+    }
+
+    .hi {
+        padding: 10px 15px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #5cb85c;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-left: 10px;
+        margin-top: 15px;
+    }
+
+    .hi:hover {
+        background-color: #4cae4c;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        width: 300px;
+        max-width: 100%;
+    }
+
+    li {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 10px;
+        margin-top: 5px;
+        font-size: 16px;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    li:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .remove-button {
+        padding: 5px 10px;
+        font-size: 14px;
+        color: #fff;
+        background-color: #d9534f;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .remove-button:hover {
+        background-color: #c9302c;
+    }
     </style>
     <h1>My To-Do List</h1>
 
     <input type="text" id="taskInput" placeholder="Enter a new task">
+    <input type="time" id="timeInput" placeholder="Time">
     <button class="hi" onClick="addTask()">Add Task</button>
 
     <ul id="taskList"></ul>
@@ -97,14 +176,32 @@ li:nth-child(even) {
     <script>
     function addTask() {
         var input = document.getElementById("taskInput");
+        var timeInput = document.getElementById("timeInput");
         var taskList = document.getElementById("taskList");
+
+        var taskText = input.value.trim();
+        var taskTime = timeInput.value;
+
+        if (!taskText) {
+            alert('Please enter a task.');
+            return;
+        }
+
+        if (!taskTime) {
+            alert('Please select a time.');
+            return;
+        }
 
         // Create a new list item
         var newTask = document.createElement("li");
 
         // Create a span for the task text
-        var taskText = document.createElement("span");
-        taskText.textContent = input.value;
+        var taskTextElement = document.createElement("span");
+        taskTextElement.textContent = taskText;
+
+        // Create a span for the task time
+        var taskTimeElement = document.createElement("span");
+        taskTimeElement.textContent = "Reminder at: " + taskTime;
 
         // Create a remove button
         var removeButton = document.createElement("button");
@@ -112,18 +209,42 @@ li:nth-child(even) {
         removeButton.className = "remove-button";
         removeButton.onclick = function() {
             taskList.removeChild(newTask);
+            clearInterval(newTask.timerId); // Clear timer if task is removed
         };
 
         // Append the text and button to the list item
-        newTask.appendChild(taskText);
+        newTask.appendChild(taskTextElement);
+        newTask.appendChild(taskTimeElement);
         newTask.appendChild(removeButton);
 
         // Add the list item to the task list
         taskList.appendChild(newTask);
 
-        // Clear the input field
+        // Clear the input fields
         input.value = "";
+        timeInput.value = "";
+
+        // Set up an alarm for the task
+        var now = new Date();
+        var [hours, minutes] = taskTime.split(':').map(Number);
+        var alarmTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+
+        if (alarmTime < now) {
+            alarmTime.setDate(now.getDate() + 1); // Schedule for next day if time has already passed
+        }
+
+        var timeUntilAlarm = alarmTime - now;
+
+        // Set an interval to check the time every second
+        newTask.timerId = setInterval(function() {
+            var now = new Date();
+            if (now >= alarmTime) {
+                alert('Reminder: ' + taskText);
+                clearInterval(newTask.timerId); // Clear the interval once the alarm has triggered
+            }
+        }, 1000);
     }
     </script>
 </body>
 </html>
+
