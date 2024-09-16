@@ -1,88 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>To-Do List</title>
+    <title>Personalized To-Do List</title>
     <link rel="stylesheet" href="style.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8550297850834814"
      crossorigin="anonymous"></script>
-</head>
-<body>
-    <style>
-    body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-    padding: 20px;
-}
-
-h1 {
-    color: #333;
-    margin-bottom: 20px;
-}
-
-input[type="text"] {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    width: 300px;
-    max-width: 100%;
-}
-input[type="time"] {
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        width: 150px;
-        max-width: 100%;
-        margin-top: 10px;
-}
-.hi {
-    padding: 10px 15px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #5cb85c;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-left: 10px;
-    margin-top: 15px
-}
-
-.hi:hover {
-    background-color: #4cae4c;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-    width: 300px;
-    max-width: 100%;
-}
-
-li {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-    margin-top: 5px;
-    font-size: 16px;
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-li:nth-child(even) {
-<!DOCTYPE html>
-<html>
-<head>
-    <title>To-Do List</title>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <style>
@@ -97,6 +19,12 @@ li:nth-child(even) {
         padding: 20px;
     }
 
+    #namePrompt {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     h1 {
         color: #333;
         margin-bottom: 20px;
@@ -109,6 +37,7 @@ li:nth-child(even) {
         border-radius: 4px;
         width: 300px;
         max-width: 100%;
+        margin-bottom: 15px;
     }
 
     input[type="time"] {
@@ -174,16 +103,68 @@ li:nth-child(even) {
     .remove-button:hover {
         background-color: #c9302c;
     }
+
+    #greeting {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    /* Style for the contact email */
+    footer {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 16px;
+        color: #555;
+    }
+
+    footer a {
+        color: #5cb85c;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    footer a:hover {
+        color: #4cae4c;
+        text-decoration: underline;
+    }
     </style>
-    <h1>My To-Do List</h1>
 
-    <input type="text" id="taskInput" placeholder="Enter a new task">
-    <input type="time" id="timeInput" placeholder="Time">
-    <button class="hi" onClick="addTask()">Add Task</button>
+    <div id="namePrompt">
+        <input type="text" id="nameInput" placeholder="Enter your name">
+        <button class="hi" onClick="setUserName()">Submit</button>
+    </div>
 
-    <ul id="taskList"></ul>
+    <h1 id="greeting" style="display:none">My To-Do List</h1>
+
+    <input type="text" id="taskInput" placeholder="Enter a new task" style="display:none">
+    <input type="time" id="timeInput" placeholder="Time" style="display:none">
+    <button class="hi" onClick="addTask()" style="display:none">Add Task</button>
+
+    <ul id="taskList" style="display:none"></ul>
+
+    <!-- Contact email section -->
+    <footer>
+        For any inquiries, contact us at 
+        <a href="mailto:prasanna2009126@gmail.com">prasanna2009126@gmail.com</a>
+    </footer>
 
     <script>
+    function setUserName() {
+        var name = document.getElementById('nameInput').value.trim();
+        if (name) {
+            document.getElementById('greeting').textContent = name + "'s To-Do List";
+            document.getElementById('greeting').style.display = 'block';
+            document.getElementById('taskInput').style.display = 'inline-block';
+            document.getElementById('timeInput').style.display = 'inline-block';
+            document.querySelector('button[onClick="addTask()"]').style.display = 'inline-block';
+            document.getElementById('taskList').style.display = 'block';
+            document.getElementById('namePrompt').style.display = 'none';
+        } else {
+            alert("Please enter your name.");
+        }
+    }
+
     function addTask() {
         var input = document.getElementById("taskInput");
         var timeInput = document.getElementById("timeInput");
@@ -256,5 +237,4 @@ li:nth-child(even) {
     }
     </script>
 </body>
-</html>
-
+</html>     
